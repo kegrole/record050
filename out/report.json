@@ -1,0 +1,89 @@
+{
+  "summary": {
+    "total": 10,
+    "dangerous": 6,
+    "safe": 4
+  },
+  "findings": [
+    {
+      "sink_id": "sq_single_quoted",
+      "template": "echo '%s'",
+      "value": "hello world",
+      "verdict": "安全",
+      "layer": "单引号",
+      "reason": "值位于单引号内，shell 不进行任何展开，所有字符都按字面量处理"
+    },
+    {
+      "sink_id": "dq_plain_text",
+      "template": "echo \"%s\"",
+      "value": "hello world",
+      "verdict": "安全",
+      "layer": "双引号",
+      "reason": "值位于双引号内且不含 $、反引号、反斜杠或换行，按字面量处理"
+    },
+    {
+      "sink_id": "dq_with_variable",
+      "template": "echo \"%s\"",
+      "value": "home is $HOME",
+      "verdict": "危险",
+      "layer": "双引号",
+      "reason": "变量展开在双引号内依然生效：$HOME 会被 shell 求值后替换进命令"
+    },
+    {
+      "sink_id": "bare_with_semicolon",
+      "template": "echo %s",
+      "value": "foo; id",
+      "verdict": "危险",
+      "layer": "裸词",
+      "reason": "值位于裸词位置，分号会终结当前命令，其后的内容会作为新命令执行"
+    },
+    {
+      "sink_id": "inside_command_substitution",
+      "template": "echo $(cat %s)",
+      "value": "secret.txt",
+      "verdict": "危险",
+      "layer": "命令替换内",
+      "reason": "值落在命令替换内，命令替换会执行命令，值会成为被执行命令的一部分"
+    },
+    {
+      "sink_id": "dq_with_single_quote",
+      "template": "echo \"%s\"",
+      "value": "it's a test",
+      "verdict": "安全",
+      "layer": "双引号",
+      "reason": "值位于双引号内，单引号在双引号内只是普通字符；值也不含 $、反引号、反斜杠或换行"
+    },
+    {
+      "sink_id": "dq_with_backquote",
+      "template": "echo \"%s\"",
+      "value": "`id`",
+      "verdict": "危险",
+      "layer": "双引号",
+      "reason": "值位于双引号内，但反引号在双引号内仍会触发命令替换，命令会被执行"
+    },
+    {
+      "sink_id": "dq_closing_quote_semicolon",
+      "template": "echo \"%s\"",
+      "value": "\"; id; \"",
+      "verdict": "危险",
+      "layer": "双引号",
+      "reason": "值中的双引号先闭合了模板的引号，随后分号终止了命令，其后的内容会作为新的命令被解析"
+    },
+    {
+      "sink_id": "bare_with_newline",
+      "template": "echo %s",
+      "value": "foo\nid",
+      "verdict": "危险",
+      "layer": "裸词",
+      "reason": "值位于裸词位置，换行在裸词位置终结了原命令，其后的内容会作为新命令执行"
+    },
+    {
+      "sink_id": "sq_flag_appended",
+      "template": "git log --format='%s'",
+      "value": "%H",
+      "verdict": "安全",
+      "layer": "单引号",
+      "reason": "值位于单引号内，shell 不进行任何展开，所有字符都按字面量处理"
+    }
+  ]
+}

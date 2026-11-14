@@ -1,0 +1,54 @@
+{
+  "sinks": [
+    {
+      "sink_id": "sq_single_quoted",
+      "template": "echo '%s'",
+      "value": "hello world"
+    },
+    {
+      "sink_id": "dq_plain_text",
+      "template": "echo \"%s\"",
+      "value": "hello world"
+    },
+    {
+      "sink_id": "dq_with_variable",
+      "template": "echo \"%s\"",
+      "value": "home is $HOME"
+    },
+    {
+      "sink_id": "bare_with_semicolon",
+      "template": "echo %s",
+      "value": "foo; id"
+    },
+    {
+      "sink_id": "inside_command_substitution",
+      "template": "echo $(cat %s)",
+      "value": "secret.txt"
+    },
+    {
+      "sink_id": "dq_with_single_quote",
+      "template": "echo \"%s\"",
+      "value": "it's a test"
+    },
+    {
+      "sink_id": "dq_with_backquote",
+      "template": "echo \"%s\"",
+      "value": "\u0060id\u0060"
+    },
+    {
+      "sink_id": "dq_closing_quote_semicolon",
+      "template": "echo \"%s\"",
+      "value": "\"; id; \""
+    },
+    {
+      "sink_id": "bare_with_newline",
+      "template": "echo %s",
+      "value": "foo\nid"
+    },
+    {
+      "sink_id": "sq_flag_appended",
+      "template": "git log --format='%s'",
+      "value": "%H"
+    }
+  ]
+}
